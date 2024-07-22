@@ -103,7 +103,7 @@ const champions = {
     102: "Diana",
     103: "Rengar",
     104: "Syndra",
-    105: "Khazix",
+    105: "Kha'Zix",
     106: "Elise",
     107: "Zed",
     108: "Nami",
