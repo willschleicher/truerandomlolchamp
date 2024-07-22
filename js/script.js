@@ -65,8 +65,8 @@ async function rerollChampion(index) {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('randomChampButton').addEventListener('click', getRandomChampion);
     document.getElementById('historyCards').addEventListener('click', (event) => {
-        if (event.target.classList.contains('reroll-button')) {
-            const index = parseInt(event.target.getAttribute('data-index'));
+        if (event.target.closest('.reroll-button')) {
+            const index = parseInt(event.target.closest('.reroll-button').getAttribute('data-index'));
             rerollChampion(index);
         }
     });
