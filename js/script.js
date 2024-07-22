@@ -33,6 +33,15 @@ async function getRandomChampion() {
     return champions[championId];
 }
 
+async function getRandomChampionThatIsNotAlreadyInHistory() {
+    let newChampion;
+    do {
+        newChampion = await getRandomChampion();
+    } while (history.some(champ => champ.id === newChampion.id));
+
+    return newChampion;
+}
+
 async function getRandomNumber(min, max) {
     const response = await fetch(`https://www.random.org/integers/?num=1&min=${min}&max=${max}&col=1&base=10&format=plain&rnd=new`);
     const data = await response.text();
@@ -67,12 +76,7 @@ function renderHistory() {
 }
 
 async function rerollChampion(index) {
-    let newChampion;
-    do {
-        newChampion = await getRandomChampion();
-    } while (history.some(champ => champ.id === newChampion.id));
-
-    history[index] = newChampion;
+    history[index] = await getRandomChampionThatIsNotAlreadyInHistory();
     renderHistory();
 }
 
@@ -87,8 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     randomChampButton.addEventListener('click', async () => {
-        const champion = await getRandomChampion();
-        updateHistory(champion);
+        updateHistory(await getRandomChampionThatIsNotAlreadyInHistory());
     });
 
     document.getElementById('historyCards').addEventListener('click', (event) => {
