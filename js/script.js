@@ -1,4 +1,5 @@
-// script.js
+//TODO: gracefully handle API failures to random.org
+//TODO: and riot API
 let champions = {};
 let history = [];
 let currentVersion = '';

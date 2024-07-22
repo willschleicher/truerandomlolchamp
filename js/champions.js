@@ -1,3 +1,5 @@
+//champs organized by release date
+//TODO: use as a backup if riot api fails
 const champions = {
     1: "Singed",
     2: "Sivir",
