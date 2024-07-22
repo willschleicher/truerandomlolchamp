@@ -4,43 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random LoL Champion Selector</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    .container {
-      text-align: center;
-      background-color: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    #result {
-      font-size: 24px;
-      margin-top: 20px;
-    }
-    #history {
-      margin-top: 20px;
-      font-size: 16px;
-    }
-    #history h3 {
-      margin-bottom: 5px;
-    }
-    #historyList {
-      list-style-type: none;
-      padding: 0;
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <div class="container">
-  <h1>Random LoL Champion Selector</h1>
+  <h1>True Random Lol Champs</h1>
   <button onclick="getRandomChampion()">Get Random Champion</button>
   <div id="result"></div>
   <div id="history">
@@ -49,60 +17,6 @@
   </div>
 </div>
 
-<script>
-  const champions = [
-    "Singed", "Sivir", "Soraka", "Warwick", "Nunu & Willump", "Master Yi", "Ryze", "Sion", "Twisted Fate", "Teemo",
-    "Tristana", "Alistar", "Amumu", "Anivia", "Annie", "Ashe", "Fiddlesticks", "Jax", "Kayle", "Morgana",
-    "Rammus", "Veigar", "Zilean", "Cho'Gath", "Karthus", "Evelynn", "Tryndamere", "Twitch", "Kassadin", "Gangplank",
-    "Taric", "Blitzcrank", "Dr. Mundo", "Janna", "Malphite", "Corki", "Katarina", "Nasus", "Heimerdinger", "Shaco",
-    "Udyr", "Nidalee", "Poppy", "Gragas", "Pantheon", "Mordekaiser", "Ezreal", "Shen", "Kennen", "Garen",
-    "Akali", "Malzahar", "Olaf", "Kog'Maw", "Xin Zhao", "Vladimir", "Galio", "Urgot", "Miss Fortune", "Sona",
-    "Swain", "Lux", "LeBlanc", "Irelia", "Trundle", "Cassiopeia", "Caitlyn", "Renekton", "Karma", "Maokai",
-    "Jarvan IV", "Nocturne", "Lee Sin", "Brand", "Rumble", "Vayne", "Orianna", "Yorick", "Leona", "Wukong",
-    "Skarner", "Talon", "Riven", "Xerath", "Graves", "Shyvana", "Fizz", "Volibear", "Ahri", "Viktor",
-    "Sejuani", "Ziggs", "Nautilus", "Fiora", "Lulu", "Hecarim", "Varus", "Darius", "Draven", "Jayce",
-    "Zyra", "Diana", "Rengar", "Syndra", "Khazix", "Elise", "Zed", "Nami", "Vi", "Thresh",
-    "Quinn", "Zac", "Lissandra", "Aatrox", "Lucian", "Jinx", "Yasuo", "Vel'Koz", "Braum", "Gnar",
-    "Azir", "Kalista", "Rek'Sai", "Bard", "Ekko", "Tahm Kench", "Kindred", "Illaoi", "Jhin", "Aurelion Sol",
-    "Taliyah", "Kled", "Ivern", "Camille", "Rakan", "Xayah", "Kayn", "Ornn", "Zoe", "Kai'Sa",
-    "Pyke", "Neeko", "Sylas", "Yuumi", "Qiyana", "Senna", "Aphelios", "Sett", "Lillia", "Yone",
-    "Samira", "Seraphine", "Rell", "Viego", "Gwen", "Akshan", "Vex", "Zeri", "Renata Glasc", "Bel'Veth",
-    "Nilah", "K'Sante", "Milio", "Naafiri", "Briar", "Hwei", "Smolder", "Aurora"
-  ];
-
-  let history = [];
-
-  function getRandomChampion() {
-    const randomOrg = "https://www.random.org/integers/?num=1&min=1&max=168&col=1&base=10&format=plain&rnd=new";
-    fetch(randomOrg)
-      .then(response => response.text())
-      .then(data => {
-        const index = parseInt(data.trim()) - 1;
-        const champion = champions[index];
-        document.getElementById('result').innerText = champion;
-        updateHistory(champion);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('result').innerText = "Error occurred. Please try again.";
-      });
-  }
-
-  function updateHistory(champion) {
-    history.unshift(champion);
-    if (history.length > 3) {
-      history.pop();
-    }
-
-    const historyList = document.getElementById('historyList');
-    historyList.innerHTML = '';
-    history.forEach(champ => {
-      const li = document.createElement('li');
-      li.textContent = champ;
-      historyList.appendChild(li);
-    });
-  }
-</script>
+<script src="js/script.js"></script>
 </body>
 </html>
-
