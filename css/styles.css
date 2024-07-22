@@ -3,29 +3,89 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    background-color: #f0f0f0;
+    background-color: gray;
 }
+
 .container {
     text-align: center;
     background-color: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
 }
+
 #result {
     font-size: 24px;
     margin-top: 20px;
 }
+
 #history {
     margin-top: 20px;
-    font-size: 16px;
 }
+
 #history h3 {
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
-#historyList {
-    list-style-type: none;
-    padding: 0;
+
+#historyCards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card {
+    width: 80%;
+    background-color: whitesmoke;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: center;
+}
+
+.card-content {
+    font-size: 18px;
+}
+
+button {
+    background-color: #4c79af;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #609add;
+}
+
+.reroll-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.reroll-icon {
+    width: 20px;
+    height: 20px;
+    fill: #4c79af;
+    transition: transform 0.3s ease;
+}
+
+.reroll-button:hover .reroll-icon {
+    transform: rotate(180deg);
+    fill: white;
 }

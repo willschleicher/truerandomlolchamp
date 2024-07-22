@@ -1,190 +1,29 @@
-const champions = {
-    1: "Singed",
-    2: "Sivir",
-    3: "Soraka",
-    4: "Warwick",
-    5: "Nunu & Willump",
-    6: "Master Yi",
-    7: "Ryze",
-    8: "Sion",
-    9: "Twisted Fate",
-    10: "Teemo",
-    11: "Tristana",
-    12: "Alistar",
-    13: "Amumu",
-    14: "Anivia",
-    15: "Annie",
-    16: "Ashe",
-    17: "Fiddlesticks",
-    18: "Jax",
-    19: "Kayle",
-    20: "Morgana",
-    21: "Rammus",
-    22: "Veigar",
-    23: "Zilean",
-    24: "Cho'Gath",
-    25: "Karthus",
-    26: "Evelynn",
-    27: "Tryndamere",
-    28: "Twitch",
-    29: "Kassadin",
-    30: "Gangplank",
-    31: "Taric",
-    32: "Blitzcrank",
-    33: "Dr. Mundo",
-    34: "Janna",
-    35: "Malphite",
-    36: "Corki",
-    37: "Katarina",
-    38: "Nasus",
-    39: "Heimerdinger",
-    40: "Shaco",
-    41: "Udyr",
-    42: "Nidalee",
-    43: "Poppy",
-    44: "Gragas",
-    45: "Pantheon",
-    46: "Mordekaiser",
-    47: "Ezreal",
-    48: "Shen",
-    49: "Kennen",
-    50: "Garen",
-    51: "Akali",
-    52: "Malzahar",
-    53: "Olaf",
-    54: "Kog'Maw",
-    55: "Xin Zhao",
-    56: "Vladimir",
-    57: "Galio",
-    58: "Urgot",
-    59: "Miss Fortune",
-    60: "Sona",
-    61: "Swain",
-    62: "Lux",
-    63: "LeBlanc",
-    64: "Irelia",
-    65: "Trundle",
-    66: "Cassiopeia",
-    67: "Caitlyn",
-    68: "Renekton",
-    69: "Karma",
-    70: "Maokai",
-    71: "Jarvan IV",
-    72: "Nocturne",
-    73: "Lee Sin",
-    74: "Brand",
-    75: "Rumble",
-    76: "Vayne",
-    77: "Orianna",
-    78: "Yorick",
-    79: "Leona",
-    80: "Wukong",
-    81: "Skarner",
-    82: "Talon",
-    83: "Riven",
-    84: "Xerath",
-    85: "Graves",
-    86: "Shyvana",
-    87: "Fizz",
-    88: "Volibear",
-    89: "Ahri",
-    90: "Viktor",
-    91: "Sejuani",
-    92: "Ziggs",
-    93: "Nautilus",
-    94: "Fiora",
-    95: "Lulu",
-    96: "Hecarim",
-    97: "Varus",
-    98: "Darius",
-    99: "Draven",
-    100: "Jayce",
-    101: "Zyra",
-    102: "Diana",
-    103: "Rengar",
-    104: "Syndra",
-    105: "Khazix",
-    106: "Elise",
-    107: "Zed",
-    108: "Nami",
-    109: "Vi",
-    110: "Thresh",
-    111: "Quinn",
-    112: "Zac",
-    113: "Lissandra",
-    114: "Aatrox",
-    115: "Lucian",
-    116: "Jinx",
-    117: "Yasuo",
-    118: "Vel'Koz",
-    119: "Braum",
-    120: "Gnar",
-    121: "Azir",
-    122: "Kalista",
-    123: "Rek'Sai",
-    124: "Bard",
-    125: "Ekko",
-    126: "Tahm Kench",
-    127: "Kindred",
-    128: "Illaoi",
-    129: "Jhin",
-    130: "Aurelion Sol",
-    131: "Taliyah",
-    132: "Kled",
-    133: "Ivern",
-    134: "Camille",
-    135: "Rakan",
-    136: "Xayah",
-    137: "Kayn",
-    138: "Ornn",
-    139: "Zoe",
-    140: "Kai'Sa",
-    141: "Pyke",
-    142: "Neeko",
-    143: "Sylas",
-    144: "Yuumi",
-    145: "Qiyana",
-    146: "Senna",
-    147: "Aphelios",
-    148: "Sett",
-    149: "Lillia",
-    150: "Yone",
-    151: "Samira",
-    152: "Seraphine",
-    153: "Rell",
-    154: "Viego",
-    155: "Gwen",
-    156: "Akshan",
-    157: "Vex",
-    158: "Zeri",
-    159: "Renata Glasc",
-    160: "Bel'Veth",
-    161: "Nilah",
-    162: "K'Sante",
-    163: "Milio",
-    164: "Naafiri",
-    165: "Briar",
-    166: "Hwei",
-    167: "Smolder",
-    168: "Aurora"
-};
+import champions from './champions.js';
 
+const maxChampions = Object.keys(champions).length;
 let history = [];
 
 function getRandomChampion() {
-    const randomOrg = "https://www.random.org/integers/?num=1&min=1&max=168&col=1&base=10&format=plain&rnd=new";
-    fetch(randomOrg)
-        .then(response => response.text())
-        .then(data => {
-            const index = parseInt(data.trim());
-            const champion = champions[index];
-            document.getElementById('result').innerText = champion;
-            updateHistory(champion);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('result').innerText = "Error occurred. Please try again.";
-        });
+    getUniqueRandomChampion().then(champion => {
+        updateHistory(champion);
+    }).catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+async function getUniqueRandomChampion() {
+    let champion;
+    do {
+        const index = await getRandomNumber();
+        champion = champions[index];
+    } while (history.slice(0, 2).includes(champion));
+    return champion;
+}
+
+async function getRandomNumber() {
+    const response = await fetch(`https://www.random.org/integers/?num=1&min=1&max=${maxChampions}&col=1&base=10&format=plain&rnd=new`);
+    const data = await response.text();
+    return parseInt(data.trim());
 }
 
 function updateHistory(champion) {
@@ -192,12 +31,43 @@ function updateHistory(champion) {
     if (history.length > 3) {
         history.pop();
     }
+    renderHistory();
+}
 
-    const historyList = document.getElementById('historyList');
-    historyList.innerHTML = '';
-    history.forEach(champ => {
-        const li = document.createElement('li');
-        li.textContent = champ;
-        historyList.appendChild(li);
+function renderHistory() {
+    const historyCards = document.getElementById('historyCards');
+    historyCards.innerHTML = '';
+    history.forEach((champ, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+      <span class="card-content">${champ}</span>
+      <button class="reroll-button" data-index="${index}">
+       <svg class="reroll-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+        </svg>
+</button>
+    `;
+        historyCards.appendChild(card);
     });
 }
+
+async function rerollChampion(index) {
+    let newChampion;
+    do {
+        newChampion = await getUniqueRandomChampion();
+    } while (history.includes(newChampion));
+
+    history[index] = newChampion;
+    renderHistory();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('randomChampButton').addEventListener('click', getRandomChampion);
+    document.getElementById('historyCards').addEventListener('click', (event) => {
+        if (event.target.classList.contains('reroll-button')) {
+            const index = parseInt(event.target.getAttribute('data-index'));
+            rerollChampion(index);
+        }
+    });
+});
