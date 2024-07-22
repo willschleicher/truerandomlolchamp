@@ -50,7 +50,16 @@ body {
 }
 
 .card-content {
-    font-size: 18px;
+    flex-grow: 1;
+    text-align: left;
+}
+
+.champion-icon {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 button {
@@ -89,3 +98,4 @@ button:hover {
     transform: rotate(360deg);
     fill: white;
 }
+
