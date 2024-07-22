@@ -86,6 +86,6 @@ button:hover {
 }
 
 .reroll-button:hover .reroll-icon {
-    transform: rotate(180deg);
+    transform: rotate(360deg);
     fill: white;
 }
