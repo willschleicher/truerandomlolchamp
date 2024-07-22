@@ -52,14 +52,16 @@ body {
 .card-content {
     flex-grow: 1;
     text-align: left;
+    font-size: 20px;
+    font-weight: 500;
 }
 
 .champion-icon {
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-right: 10px;
+    width: 55px;
+    height: 55px;
+    margin-right: 16px;
+    border-radius: 5px;
+    object-fit: fill;
 }
 
 button {
@@ -88,8 +90,8 @@ button:hover {
 }
 
 .reroll-icon {
-    width: 20px;
-    height: 20px;
+    width: 35px;
+    height: 35px;
     fill: #4c79af;
     transition: transform 0.3s ease;
 }
