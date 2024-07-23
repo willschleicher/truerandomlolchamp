@@ -4,6 +4,7 @@ let champions = {};
 let history = [];
 let currentVersion = '';
 let preloadedChampion = null;
+let preloadedImage = null;
 
 async function initializeApp() {
     try {
@@ -52,10 +53,15 @@ async function getRandomNumber(min, max) {
 
 async function preloadRandomChampion() {
     preloadedChampion = await getRandomChampionThatIsNotAlreadyInHistory();
+    preloadedImage = new Image();
+    preloadedImage.src = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${preloadedChampion.image.full}`;
+    await new Promise((resolve) => {
+        preloadedImage.onload = resolve;
+    });
 }
 
-function updateHistory(champion) {
-    history.unshift(champion);
+function updateHistory(champion, image) {
+    history.unshift({ ...champion, preloadedImage: image });
     if (history.length > 3) {
         history.pop();
     }
@@ -69,7 +75,7 @@ function renderHistory() {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-            <img src="https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${champ.image.full}" alt="${champ.name}" class="champion-icon">
+            <img src="${champ.preloadedImage.src}" alt="${champ.name}" class="champion-icon">
             <span class="card-content">${champ.name}</span>
             <button class="reroll-button" data-index="${index}">
                 <svg class="reroll-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -83,11 +89,18 @@ function renderHistory() {
 
 async function rerollChampion(index) {
     if (preloadedChampion) {
-        history[index] = preloadedChampion;
+        history[index] = { ...preloadedChampion, preloadedImage };
         preloadedChampion = null;
+        preloadedImage = null;
         preloadRandomChampion();
     } else {
-        history[index] = await getRandomChampionThatIsNotAlreadyInHistory();
+        const newChampion = await getRandomChampionThatIsNotAlreadyInHistory();
+        const newImage = new Image();
+        newImage.src = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${newChampion.image.full}`;
+        await new Promise((resolve) => {
+            newImage.onload = resolve;
+        });
+        history[index] = { ...newChampion, preloadedImage: newImage };
     }
     renderHistory();
 }
@@ -104,11 +117,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     randomChampButton.addEventListener('click', async () => {
         if (preloadedChampion) {
-            updateHistory(preloadedChampion);
+            updateHistory(preloadedChampion, preloadedImage);
             preloadedChampion = null;
+            preloadedImage = null;
             preloadRandomChampion();
         } else {
-            updateHistory(await getRandomChampionThatIsNotAlreadyInHistory());
+            const newChampion = await getRandomChampionThatIsNotAlreadyInHistory();
+            const newImage = new Image();
+            newImage.src = `https://ddragon.leagueoflegends.com/cdn/${currentVersion}/img/champion/${newChampion.image.full}`;
+            await new Promise((resolve) => {
+                newImage.onload = resolve;
+            });
+            updateHistory(newChampion, newImage);
         }
     });
 
