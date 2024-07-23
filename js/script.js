@@ -3,12 +3,14 @@
 let champions = {};
 let history = [];
 let currentVersion = '';
+let preloadedChampion = null;
 
 async function initializeApp() {
     try {
         currentVersion = await getLatestVersion();
         champions = await getChampions(currentVersion);
         document.getElementById('randomChampButton').disabled = false;
+        await preloadRandomChampion();
     } catch (error) {
         console.error('Error initializing app:', error);
     }
@@ -48,6 +50,10 @@ async function getRandomNumber(min, max) {
     return parseInt(data.trim());
 }
 
+async function preloadRandomChampion() {
+    preloadedChampion = await getRandomChampionThatIsNotAlreadyInHistory();
+}
+
 function updateHistory(champion) {
     history.unshift(champion);
     if (history.length > 3) {
@@ -76,7 +82,13 @@ function renderHistory() {
 }
 
 async function rerollChampion(index) {
-    history[index] = await getRandomChampionThatIsNotAlreadyInHistory();
+    if (preloadedChampion) {
+        history[index] = preloadedChampion;
+        preloadedChampion = null;
+        preloadRandomChampion();
+    } else {
+        history[index] = await getRandomChampionThatIsNotAlreadyInHistory();
+    }
     renderHistory();
 }
 
@@ -91,7 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     randomChampButton.addEventListener('click', async () => {
-        updateHistory(await getRandomChampionThatIsNotAlreadyInHistory());
+        if (preloadedChampion) {
+            updateHistory(preloadedChampion);
+            preloadedChampion = null;
+            preloadRandomChampion();
+        } else {
+            updateHistory(await getRandomChampionThatIsNotAlreadyInHistory());
+        }
     });
 
     document.getElementById('historyCards').addEventListener('click', (event) => {
