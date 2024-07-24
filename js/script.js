@@ -5,6 +5,8 @@ let history = [];
 let currentVersion = '';
 let preloadedChampion = null;
 let preloadedImage = null;
+let peer;
+let connections = [];
 
 async function initializeApp() {
     try {
@@ -12,6 +14,7 @@ async function initializeApp() {
         champions = await getChampions(currentVersion);
         document.getElementById('randomChampButton').disabled = false;
         await preloadRandomChampion();
+        initializePeerJS();
     } catch (error) {
         console.error('Error initializing app:', error);
     }
@@ -61,11 +64,36 @@ async function preloadRandomChampion() {
 }
 
 function updateHistory(champion, image) {
-    history.unshift({ ...champion, preloadedImage: image });
+    history.unshift({...champion, preloadedImage: image});
     if (history.length > 3) {
         history.pop();
     }
     renderHistory();
+
+    if (connections.length > 0) {
+        shareCurrentHistory();
+    }
+}
+
+function shareCurrentHistory() {
+    const historyData = {
+        type: 'history',
+        rolls: history.map(champ => ({
+            name: champ.name,
+            imageUrl: champ.preloadedImage.src
+        }))
+    };
+
+    console.log('Sharing current history:', historyData);
+
+    connections.forEach(conn => {
+        if (conn.open) {
+            console.log('Sending history to:', conn.peer);
+            conn.send(historyData);
+        } else {
+            console.log('Connection not open:', conn.peer);
+        }
+    });
 }
 
 function renderHistory() {
@@ -89,7 +117,7 @@ function renderHistory() {
 
 async function rerollChampion(index) {
     if (preloadedChampion) {
-        history[index] = { ...preloadedChampion, preloadedImage };
+        history[index] = {...preloadedChampion, preloadedImage};
         preloadedChampion = null;
         preloadedImage = null;
         preloadRandomChampion();
@@ -100,9 +128,99 @@ async function rerollChampion(index) {
         await new Promise((resolve) => {
             newImage.onload = resolve;
         });
-        history[index] = { ...newChampion, preloadedImage: newImage };
+        history[index] = {...newChampion, preloadedImage: newImage};
     }
     renderHistory();
+    if (connections.length > 0) {
+        shareCurrentHistory();
+    }
+}
+
+function generateShortId() {
+    return Math.random().toString(36).substr(2, 5);
+}
+
+function initializePeerJS() {
+    const shortId = generateShortId();
+    peer = new Peer(shortId);
+
+    peer.on('open', (id) => {
+        document.getElementById('peer-id').textContent = id;
+        updateConnectionStatus('Ready to connect');
+    });
+
+    peer.on('connection', (conn) => {
+        console.log('New connection received:', conn.peer);
+        setupConnection(conn);
+    });
+}
+
+function setupConnection(conn) {
+    connections = connections.filter(c => c.open);
+    connections.push(conn);
+
+    conn.on('open', () => {
+        updateConnectionStatus(`Connected to ${conn.peer}`);
+        console.log('Connection opened to:', conn.peer);
+        shareCurrentHistory();
+    });
+
+    conn.on('close', () => {
+        updateConnectionStatus('Disconnected');
+        console.log('Connection closed:', conn.peer);
+        connections = connections.filter(c => c !== conn);
+    });
+
+    conn.on('data', (data) => {
+        console.log('Received data:', data);
+        if (data.type === 'history') {
+            displaySharedRolls(data.rolls);
+        }
+    });
+}
+
+function connectToPeer() {
+    const peerId = document.getElementById('peer-id-input').value;
+    updateConnectionStatus('Connecting...');
+    console.log('Attempting to connect to:', peerId);
+    const conn = peer.connect(peerId);
+    connections.push(conn);
+    setupConnection(conn);
+}
+
+function shareRolls() {
+    shareCurrentHistory();
+}
+
+function displaySharedRolls(rolls) {
+    const sharedRollsContainer = document.getElementById('shared-rolls');
+    if (!sharedRollsContainer) {
+        console.error('Shared rolls container not found');
+        return;
+    }
+    sharedRollsContainer.innerHTML = '<h3>Shared Rolls</h3>';
+
+    const sharedHistoryCards = document.createElement('div');
+    sharedHistoryCards.id = 'sharedHistoryCards';
+    sharedHistoryCards.className = 'history-cards';
+
+    rolls.forEach(roll => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <img src="${roll.imageUrl}" alt="${roll.name}" class="champion-icon">
+            <span class="card-content">${roll.name}</span>
+        `;
+        sharedHistoryCards.appendChild(card);
+    });
+
+    sharedRollsContainer.appendChild(sharedHistoryCards);
+}
+
+function updateConnectionStatus(status) {
+    const statusElement = document.getElementById('connection-status');
+    statusElement.textContent = status;
+    console.log('Connection status updated:', status);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -138,4 +256,14 @@ document.addEventListener('DOMContentLoaded', () => {
             rerollChampion(index);
         }
     });
+
+    const connectButton = document.getElementById('connect-button');
+    connectButton.addEventListener('click', connectToPeer);
+
+    const shareButton = document.getElementById('share-button');
+    shareButton.addEventListener('click', shareRolls);
+
+    updateConnectionStatus('Not connected');
+
+    initializePeerJS();
 });

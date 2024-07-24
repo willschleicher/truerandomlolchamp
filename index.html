@@ -7,18 +7,32 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="container">
-  <h1>Random LoL Champion Selector</h1>
-  <button id="randomChampButton">Get Random Champion</button>
-  <div id="history">
-    <div id="historyCards"></div>
+<div class="main-container">
+  <div class="column column-left">
+    <div class="container">
+      <h1>Random LoL Champion Selector</h1>
+      <button id="randomChampButton">Get Random Champion</button>
+      <div id="history">
+        <div id="historyCards"></div>
+      </div>
+      <p>
+        True random generation thanks to the RANDOM.ORG number generator API. Champion data provided by Riot Games API.
+      </p>
+    </div>
   </div>
-  <p>
-    True random generation thanks to the RANDOM.ORG number generator API. Champion data provided by Riot Games API.
-  </p>
+  <div class="column column-right">
+    <div id="shared-rolls"></div>
+    <div class="webrtc-container">
+      <h3>Your Peer ID: <span id="peer-id"></span></h3>
+      <input type="text" id="peer-id-input" placeholder="Enter peer ID to connect">
+      <button id="connect-button">Connect</button>
+      <button id="share-button">Share Current Rolls</button>
+      <p>Connection Status: <span id="connection-status"></span></p>
+    </div>
+  </div>
 </div>
 
-<script src="js/champions.js" type="module"></script>
-<script src="js/script.js" type="module"></script>
+<script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
