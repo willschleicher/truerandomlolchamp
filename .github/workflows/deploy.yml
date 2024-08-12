@@ -3,7 +3,6 @@ name: Deploy Angular App to GitHub Pages
 on:
   push:
     branches:
-      - angular-version-18-rewrite
       - main
 
 jobs:
