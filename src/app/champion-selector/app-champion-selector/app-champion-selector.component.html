@@ -6,7 +6,7 @@
   <div id="history">
     <div id="historyCards">
       <div *ngFor="let champ of history; let i = index" class="card">
-        <img [src]="champ.preloadedImage?.src || ''" [alt]="champ.name" class="champion-icon">
+        <img [src]="champ.preloadedImage?.src" [alt]="champ.name" class="champion-icon">
         <span class="card-content">{{ champ.name }}</span>
         <button class="reroll-button" (click)="rerollChampion(i)">
           <svg class="reroll-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
